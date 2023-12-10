@@ -2,8 +2,8 @@
 // kernel.h
 //
 // Circle - A C++ bare metal environment for Raspberry Pi
-// Copyright (C) 2014-2023  R. Stange <rsta2@o2online.de>
-// 
+// Copyright (C) 2014-2022  R. Stange <rsta2@o2online.de>
+//
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
@@ -24,14 +24,22 @@
 #include <circle/koptions.h>
 #include <circle/devicenameservice.h>
 #include <circle/screen.h>
+#include <circle/serial.h>
 #include <circle/exceptionhandler.h>
 #include <circle/interrupt.h>
 #include <circle/timer.h>
 #include <circle/logger.h>
-#include <circle/types.h>
+#include <circle/sched/scheduler.h>
 #include <circle/i2cmaster.h>
-#include <circle/usb/usbcontroller.h>
-#include "simple.hpp"
+#include <circle/usb/usbhcidevice.h>
+#include <circle/sound/soundbasedevice.h>
+#include <circle/types.h>
+#include "faust.hpp"
+
+
+#ifdef USE_VCHIQ_SOUND
+	#include <vc4/vchiq/vchiqdevice.h>
+#endif
 
 enum TShutdownMode
 {
@@ -49,6 +57,11 @@ public:
 	boolean Initialize (void);
 
 	TShutdownMode Run (void);
+private:
+	void WriteSoundData (unsigned nFrames);
+
+	void GetSoundData (void *pBuffer, unsigned nFrames);
+
 
 private:
 	// do not change this order
@@ -62,8 +75,12 @@ private:
 	CLogger			m_Logger;
 	CI2CMaster		m_I2CMaster;
 	CUSBController		*m_pUSB;
+#ifdef USE_VCHIQ_SOUND
+	CVCHIQDevice		m_VCHIQ;
+#endif
+	CFaust				*m_Faust;
+	CSoundBaseDevice	*m_pSound;
 
-	//CMiniOrgan		*m_pMiniOrgan;
 };
 
 #endif

@@ -7,7 +7,7 @@ include ../circle-stdlib/Config.mk
 CIRCLEHOME = ../circle-stdlib/libs/circle
 NEWLIBDIR = ../circle-stdlib/install/$(NEWLIB_ARCH)
 
-OBJS	= main.o kernel.o simple.o
+OBJS	= main.o kernel.o simple.o faust.o
 
 include $(CIRCLEHOME)/Rules.mk
 
